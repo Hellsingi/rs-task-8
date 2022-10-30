@@ -1,4 +1,7 @@
-service: serverless-task-8
+service: nestjs-cart-service
+
+frameworkVersion: '3'
+useDotenv: true
 
 plugins:
   - serverless-offline
@@ -6,6 +9,14 @@ plugins:
 provider:
   name: aws
   runtime: nodejs14.x
+  stage: dev
+  region: ${env:REGION}
+  environment:
+    PG_HOST: ${env:PG_HOST}
+    PG_PORT: ${env:PG_PORT}
+    PG_DATABASE: ${env:PG_DATABASE}
+    PG_USERNAME: ${env:PG_USERNAME}
+    PG_PASSWORD: ${env:PG_PASSWORD}
 
 functions:
   main:
@@ -13,7 +24,7 @@ functions:
     events:
       - http:
           method: GET
-          path: /api/profile
+          path: /
       - http:
-          method: GET
-          path: /ping
+          method: ANY
+          path: '{proxy+}'
