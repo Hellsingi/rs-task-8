@@ -12,11 +12,11 @@ provider:
   stage: dev
   region: ${env:REGION}
   environment:
-    PG_HOST: ${env:PG_HOST}
-    PG_PORT: ${env:PG_PORT}
-    PG_DATABASE: ${env:PG_DATABASE}
-    PG_USERNAME: ${env:PG_USERNAME}
-    PG_PASSWORD: ${env:PG_PASSWORD}
+    PG_HOST: ${env:DB_HOST}
+    PG_PORT: ${env:DB_PORT}
+    PG_DATABASE: ${env:DB_NAME}
+    PG_USERNAME: ${env:DB_USERNAME}
+    PG_PASSWORD: ${env:DB_PASSWORD}
 
 functions:
   main:

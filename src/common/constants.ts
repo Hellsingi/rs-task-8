@@ -1,8 +1,16 @@
+import { HttpStatus } from '@nestjs/common';
+
 export const ConstantsRepository = {
   USERS_REPOSITORY: 'USERS_REPOSITORY',
   CARTS_REPOSITORY: 'CARTS_REPOSITORY',
   CART_ITEMS_REPOSITORY: 'CART_ITEMS_REPOSITORY',
-  PRODUCTS_REPOSITORY: 'PRODUCTS_REPOSITORY',
+  ORDERS_REPOSITORY: 'ORDERS_REPOSITORY',
+  FILMS_REPOSITORY: 'FILMS_REPOSITORY',
+};
+
+export type CustomResponse = {
+  statusCode: HttpStatus;
+  message: string;
 };
 
 export const DATABASE_CONNECTION = 'DATABASE_CONNECTION';

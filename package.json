@@ -20,6 +20,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "service:offline": "yarn build && serverless offline",
+    "service:deploy": "sls deploy",
     "typeorm": " ./node_modules/typeorm/cli.js --config src/database/connection-options.ts",
     "typeorm:cli": "ts-node ./node_modules/typeorm/cli -config src/database/connection-options.ts",
     "migration:generate": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm migration:generate -d src/database/connection-options.ts",
@@ -36,6 +37,8 @@
     "@nestjs/typeorm": "^9.0.1",
     "@vendia/serverless-express": "^4.10.1",
     "aws-lambda": "^1.0.7",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2",
     "helmet": "^4.2.0",
     "passport": "^0.4.1",
     "passport-http": "^0.3.0",
@@ -66,13 +69,14 @@
     "jest": "26.4.2",
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
+    "serverless-dotenv-plugin": "^4.0.2",
     "serverless-offline": "^11.2.1",
     "supertest": "^4.0.2",
     "ts-jest": "26.2.0",
     "ts-loader": "^6.2.1",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.8.4"
+    "typescript": "4.7.4"
   },
   "jest": {
     "moduleFileExtensions": [

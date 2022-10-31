@@ -1,20 +1,33 @@
 import { DataSource } from 'typeorm';
 import { StockEntity } from '../stock/entities/stock.entity';
 import { FilmEntity } from '../film/entities/film.entity';
-import dotenv from 'dotenv';
+import { CartItemEntity } from '../cart/entities/cart-item.entity';
+import { CartEntity } from '../cart/entities/cart.entity';
+import { UserEntity } from '../users/entities/user.entity';
+import { OrderEntity } from '../order/entities/order.entity';
 
+import dotenv from 'dotenv';
 dotenv.config();
 
+const { DB_HOST, DB_PORT, DB_USERNAME, DB_NAME, DB_PASSWORD } = process.env;
+
 export const ConnectionDataSource: DataSource = new DataSource({
-  name: `default`,
   type: `postgres`,
-  port: Number(process.env.DB_PORT),
+  port: Number(DB_PORT),
+  host: DB_HOST,
+  username: DB_USERNAME,
+  database: DB_NAME,
+  password: DB_PASSWORD,
+  entities: [
+    CartEntity,
+    CartItemEntity,
+    UserEntity,
+    FilmEntity,
+    StockEntity,
+    OrderEntity,
+  ],
+  logging: true,
   synchronize: false,
-  host: process.env.DB_HOST,
-  username: process.env.DB_USERNAME,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  entities: [FilmEntity, StockEntity],
   migrations: ['src/migrations/*.ts'],
   extra: {
     ssl: {
