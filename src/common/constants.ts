@@ -14,3 +14,8 @@ export type CustomResponse = {
 };
 
 export const DATABASE_CONNECTION = 'DATABASE_CONNECTION';
+
+export const JWT_CONFIG = {
+  secret: 'secret',
+  expiresIn: '12h',
+};
