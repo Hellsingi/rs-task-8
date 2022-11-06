@@ -1,0 +1,13 @@
+.dockerignore
+node_modules
+npm-debug.log
+Dockerfile
+Dockerfiles
+scripts
+.git
+.gitignore
+.elasticbeanstalk
+test
+dist
+.prettierrc
+.eslintrc.js
