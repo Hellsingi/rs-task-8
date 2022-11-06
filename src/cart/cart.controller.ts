@@ -1,92 +1,77 @@
-import { Controller, Get, Delete, Put, Body, Req, Post, UseGuards, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Delete,
+  Put,
+  Body,
+  Req,
+  Post,
+  UseGuards,
+  HttpStatus,
+} from '@nestjs/common';
 
-// import { BasicAuthGuard, JwtAuthGuard } from '../auth';
-import { OrderService } from '../order';
-import { AppRequest, getUserIdFromRequest } from '../shared';
-
-import { calculateCartTotal } from './models-rules';
+import { UpdateCartDto } from './dto/update-cart.dto';
+import { AdditionalOrderInfoDto } from '../order/dto/additional-order-info.dto';
+import { CustomResponse } from '../common/constants';
+import { CartEntity } from './entities/cart.entity';
+import { OrderEntity } from '../order/entities/order.entity';
 import { CartService } from './services';
+import { AppRequest, getUserIdFromRequest } from '../shared';
 
 @Controller('api/profile/cart')
 export class CartController {
-  constructor(
-    private cartService: CartService,
-    private orderService: OrderService
-  ) { }
+  constructor(private cartService: CartService) {}
 
   // @UseGuards(JwtAuthGuard)
   // @UseGuards(BasicAuthGuard)
   @Get()
-  findUserCart(@Req() req: AppRequest) {
-    const cart = this.cartService.findOrCreateByUserId(getUserIdFromRequest(req));
-
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'OK',
-      data: { cart, total: calculateCartTotal(cart) },
-    }
+  async findUserCart(@Req() req: AppRequest): Promise<
+    | (CustomResponse & {
+        body: {
+          cart: CartEntity;
+          total: number;
+        };
+      })
+    | CustomResponse
+  > {
+    return this.cartService.findOrCreateByUserId(getUserIdFromRequest(req));
   }
 
   // @UseGuards(JwtAuthGuard)
   // @UseGuards(BasicAuthGuard)
   @Put()
-  updateUserCart(@Req() req: AppRequest, @Body() body) { // TODO: validate body payload...
-    const cart = this.cartService.updateByUserId(getUserIdFromRequest(req), body)
-
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'OK',
-      data: {
-        cart,
-        total: calculateCartTotal(cart),
-      }
-    }
+  async updateUserCart(
+    @Req() req: AppRequest,
+    @Body() updateCartDto: UpdateCartDto,
+  ) {
+    return this.cartService.updateByUserId(
+      getUserIdFromRequest(req),
+      updateCartDto,
+    );
   }
 
   // @UseGuards(JwtAuthGuard)
   // @UseGuards(BasicAuthGuard)
   @Delete()
-  clearUserCart(@Req() req: AppRequest) {
-    this.cartService.removeByUserId(getUserIdFromRequest(req));
-
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'OK',
-    }
+  async clearUserCart(@Req() req: AppRequest): Promise<CustomResponse> {
+    return this.cartService.removeByUserId(getUserIdFromRequest(req));
   }
 
   // @UseGuards(JwtAuthGuard)
   // @UseGuards(BasicAuthGuard)
   @Post('checkout')
-  checkout(@Req() req: AppRequest, @Body() body) {
-    const userId = getUserIdFromRequest(req);
-    const cart = this.cartService.findByUserId(userId);
-
-    if (!(cart && cart.items.length)) {
-      const statusCode = HttpStatus.BAD_REQUEST;
-      req.statusCode = statusCode
-
-      return {
-        statusCode,
-        message: 'Cart is empty',
-      }
-    }
-
-    const { id: cartId, items } = cart;
-    const total = calculateCartTotal(cart);
-    const order = this.orderService.create({
-      ...body, // TODO: validate and pick only necessary data
-      userId,
-      cartId,
-      items,
-      total,
-    });
-    this.cartService.removeByUserId(userId);
-
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'OK',
-      data: { order }
-    }
+  async checkout(
+    @Req() req: AppRequest,
+    @Body() additionalOrderInfoDto: AdditionalOrderInfoDto,
+  ): Promise<
+    | (CustomResponse & {
+        body: OrderEntity;
+      })
+    | CustomResponse
+  > {
+    return this.cartService.checkout(
+      getUserIdFromRequest(req),
+      additionalOrderInfoDto,
+    );
   }
 }

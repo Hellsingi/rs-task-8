@@ -1,0 +1,30 @@
+service: nestjs-cart-service
+
+frameworkVersion: '3'
+useDotenv: true
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: ${env:REGION}
+  environment:
+    PG_HOST: ${env:DB_HOST}
+    PG_PORT: ${env:DB_PORT}
+    PG_DATABASE: ${env:DB_NAME}
+    PG_USERNAME: ${env:DB_USERNAME}
+    PG_PASSWORD: ${env:DB_PASSWORD}
+
+functions:
+  main:
+    handler: dist/main.handler
+    events:
+      - http:
+          method: GET
+          path: /
+      - http:
+          method: ANY
+          path: '{proxy+}'
